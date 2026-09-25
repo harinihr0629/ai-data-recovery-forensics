@@ -1,12 +1,10 @@
 from __future__ import annotations
 
-import os
-from pathlib import Path
-
 import streamlit as st
 
 from database.connection import init_db
-from database.repositories import create_default_session, get_session_stats, list_sessions, list_recent_audit
+from database.repositories import create_default_session, get_session_stats
+from database.seed import seed_demo_data
 from ui.dashboard import render_dashboard
 from ui.recovery import render_recovery_workspace
 from ui.fragments import render_fragment_intelligence
@@ -22,7 +20,6 @@ from ui.theme import apply_theme
 
 st.set_page_config(page_title="AI Recovery Platform", layout="wide", page_icon="🛡️")
 apply_theme()
-
 init_db()
 
 if "selected_page" not in st.session_state:
@@ -31,6 +28,8 @@ if "selected_page" not in st.session_state:
 if "active_session_id" not in st.session_state:
     session = create_default_session("Primary Investigation Session")
     st.session_state.active_session_id = session["id"]
+
+seed_demo_data(st.session_state.active_session_id)
 
 PAGES = {
     "Dashboard": render_dashboard,
@@ -62,4 +61,3 @@ st.title(main_title)
 
 if main_title in PAGES:
     PAGES[main_title](st.session_state.active_session_id)
-
