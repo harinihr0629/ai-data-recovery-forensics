@@ -1,0 +1,32 @@
+from __future__ import annotations
+
+import streamlit as st
+
+from database.repositories import add_system_setting, get_system_setting
+
+
+def render_settings(session_id: int) -> None:
+    st.markdown("### Recovery configuration")
+    fragment_size = st.number_input("Fragment size", min_value=64, max_value=4096, value=512)
+    reconstruction_threshold = st.slider("Reconstruction threshold", 0.0, 1.0, 0.75)
+    min_confidence = st.slider("Minimum confidence", 0.0, 1.0, 0.7)
+    deep_analysis = st.checkbox("Deep analysis")
+
+    st.markdown("### AI configuration")
+    provider = st.selectbox("AI provider", ["local", "openai"], index=0)
+    model = st.text_input("Model", value="local-fallback")
+    temperature = st.slider("Temperature", 0.0, 1.0, 0.3)
+    enable_ai = st.checkbox("Enable AI assistant", value=True)
+
+    if st.button("Save configuration"):
+        add_system_setting("fragment_size", str(fragment_size))
+        add_system_setting("reconstruction_threshold", str(reconstruction_threshold))
+        add_system_setting("min_confidence", str(min_confidence))
+        add_system_setting("deep_analysis", str(deep_analysis))
+        add_system_setting("provider", provider)
+        add_system_setting("model", model)
+        add_system_setting("temperature", str(temperature))
+        add_system_setting("enable_ai", str(enable_ai))
+        st.success("Settings saved to the database.")
+
+    st.caption(f"Current provider: {get_system_setting('provider', 'local')}")

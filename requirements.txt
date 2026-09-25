@@ -1,0 +1,14 @@
+streamlit
+SQLAlchemy
+pandas
+plotly
+numpy
+scikit-learn
+Pillow
+python-magic
+pypdf
+python-docx
+openpyxl
+rarfile
+py7zr
+python-dotenv
